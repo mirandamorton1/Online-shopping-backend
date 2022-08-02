@@ -24,7 +24,7 @@ router.get('/:id', async (req, res) => {
   try {
     const categoryData = await Category.findByPk(req.params.id, {
       // JOIN with travellers, using the Trip through table
-      include: [{ model: Traveller, through: Trip, as: 'location_travellers' }]
+      include: [{ model: Product }]
     });
 
     if (!categoryData) {
@@ -51,7 +51,10 @@ router.post('/', async (req, res) => {
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
   try {
-    const categoryData = Category.update(req.body);
+    const categoryData = Category.update(req.body, {where: {
+      id: req.params.id
+    }
+  });
     res.status(200).json(categoryData);
   } catch (err) {
     res.status(400).json(err);
